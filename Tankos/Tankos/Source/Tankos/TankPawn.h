@@ -10,6 +10,7 @@
 
 class UStaticMeshComponent;
 class ACannon;
+class UArrowComponent;
 UCLASS()
 class TANKOS_API ATankPawn : public APawn
 {
@@ -29,14 +30,10 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UCameraComponent* Camera;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	class UArrowComponent* CannonSetupPoint;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
+	UArrowComponent* CannonSetupPoint;
 
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
-	TSubclassOf<ACannon> CannonClass;
 	
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.0f;
 
@@ -52,13 +49,14 @@ protected:
 	UPROPERTY()
 	class ATankController* TankController;
 
-	void SetupCannon();
 private: 
 	/*FVector AxisValue;*/
 	float ForwardAxisValue = 0.0f;
 	float RightAxisValue = 0.0f;
 	float CurrentRotateAxisValue = 0.0f;
 	float RotateRightAxisValue = 0.0f;
+
+	bool bUseMainCannon = true;
 public:
 	// Sets default values for this pawn's properties
 	ATankPawn();
@@ -66,6 +64,15 @@ public:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void RotateRight(float Value);
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
+	TSubclassOf<ACannon> CannonClass;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
+	TSubclassOf<ACannon> SecondCannonClass;
+
+	TSubclassOf<ACannon> GetCannonClass() { return CannonClass; }
+
+	TSubclassOf<ACannon> GetSecondCannonClass() { return SecondCannonClass; }
 
 	UPROPERTY()
 	ACannon* Cannon;
@@ -75,6 +82,9 @@ public:
 	void Fire();
 	void FireSpecial();
 	void BulletReload();
+	void SetupCannon(TSubclassOf<ACannon> NewCannonClass);
+	void ChangeCannon();
+	uint8 GetBulletValue() { return Cannon->GetBulletValue(); }
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;

@@ -6,9 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "TankController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class TANKOS_API ATankController : public APlayerController
 {
@@ -39,4 +37,6 @@ protected:
 	void FireSpecial();
 	UFUNCTION()
 	void BulletReload();
+	UFUNCTION()
+	void ChangeCannon();
 };

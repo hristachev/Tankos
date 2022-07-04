@@ -14,7 +14,7 @@ class TANKOS_API ACannon : public AActor
 	GENERATED_BODY()
 
 public:
-
+ 
 	ACannon();
 
 	void Fire();
@@ -23,7 +23,12 @@ public:
 	void BulletReload();
 	bool EmptyAmmo();
 
+	float GetBulletValue() { return BulletValue; }
+	void UpdateBullet(float PickAmmo);
+
 protected:
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Component")
 	class UStaticMeshComponent* CannonMesh;
 
@@ -37,15 +42,33 @@ protected:
 	float ReloadTime = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
-	uint8 BulletValue = 10;
+	float FullBulletValue;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
-	uint8 valueOfShots = 2;
+	float BulletValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
+	float RangeBulletValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
+	float PreviousBulletValue;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
+	float valueOfShots = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component|Bullets")
+	float FireRange = 100.0f;
 
 	UPROPERTY()
 	class ATankController* TankControl;
+	
+	UPROPERTY()
+	class ATankPawn* TankPawn;
 
 	FTimerHandle ReloadTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	TSubclassOf<class AProjectile> ProjectileClass;
 	
 
 private:

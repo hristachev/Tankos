@@ -6,7 +6,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "TankController.h"
-#include "Kismet\KismetMathLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Components/ArrowComponent.h"
 
 
@@ -25,7 +25,6 @@ ATankPawn::ATankPawn()
 
 	CannonSetupPoint = CreateDefaultSubobject<UArrowComponent>(TEXT("Cannon setup point"));
 	CannonSetupPoint->AttachToComponent(TurretMesh, FAttachmentTransformRules::KeepRelativeTransform);
-
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(BodyMesh);
@@ -125,12 +124,12 @@ void ATankPawn::BeginPlay()
 
 	TankController = Cast<ATankController>(GetController());
 
-	SetupCannon();
+	SetupCannon(CannonClass);
 }
 
-void ATankPawn::SetupCannon()
+void ATankPawn::SetupCannon(TSubclassOf<ACannon> NewCannonClass)
 {
-	if (!CannonClass)
+	if (!NewCannonClass)
 	{
 		return;
 	}
@@ -142,7 +141,21 @@ void ATankPawn::SetupCannon()
 	params.Instigator = this;
 	params.Owner = this;
 
-	Cannon = GetWorld()->SpawnActor<ACannon>(CannonClass, params);
+	Cannon = GetWorld()->SpawnActor<ACannon>(NewCannonClass, params);
 	Cannon->AttachToComponent(CannonSetupPoint, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+}
+
+void ATankPawn::ChangeCannon()
+{
+	if (bUseMainCannon)
+	{
+		SetupCannon(CannonClass);
+		bUseMainCannon = false;
+	}
+	else
+	{
+		SetupCannon(SecondCannonClass);
+		bUseMainCannon = true;
+	}
 }
 
