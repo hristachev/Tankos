@@ -130,8 +130,12 @@ bool ACannon::EmptyAmmo()
 void ACannon::UpdateBullet(float PickAmmo)
 {
 	BulletValue += PickAmmo;
-	BulletValue = FMath::Clamp(BulletValue, 0.0, PickAmmo);
+	if (BulletValue > FullBulletValue)
+	{
+		BulletValue = FullBulletValue;
+	}
+	/*BulletValue = FMath::Clamp(PickAmmo, 0.0, BulletValue);
 	PreviousBulletValue = RangeBulletValue;
-	RangeBulletValue = BulletValue / FullBulletValue;
+	RangeBulletValue = BulletValue / FullBulletValue;*/
 }
 

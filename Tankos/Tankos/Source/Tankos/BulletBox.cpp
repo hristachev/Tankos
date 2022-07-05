@@ -23,16 +23,14 @@ ABulletBox::ABulletBox()
 
 void ABulletBox::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Enter To ONMOB")));
 	if ((OtherActor != nullptr) && (OtherActor != this))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("ENTER TO 1 IF")));
 		TankPawn = Cast<ATankPawn>(OtherActor);
 
 		if (TankPawn && TankPawn->GetBulletValue() < 20.0f) 
 		{
+			Cannon = TankPawn->GetCannon();
 			Cannon->UpdateBullet(BulletAmmoValue);
-			GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Add Ammo")));
 			Destroy();
 		}
 	}
