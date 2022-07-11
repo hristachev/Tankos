@@ -12,19 +12,17 @@ class TANKOS_API ATankController : public APlayerController
 {
 	GENERATED_BODY()
 
-protected:
-	UPROPERTY()
-		class ATankPawn* TankPawn;
-	UPROPERTY()
-		FVector MousePos;
 public:
 	ATankController();
 	virtual void SetupInputComponent() override;
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetPawn(APawn* InPawn) override;
 	FVector GetMousePos() { return MousePos; }
+	UPROPERTY()
+	class ATankPawn* TankPawn;
+	UPROPERTY()
+	FVector MousePos = FVector::Zero();
 protected:
-	virtual void BeginPlay() override;
 	UFUNCTION()
 	void MoveForward(float Value);
 	UFUNCTION()

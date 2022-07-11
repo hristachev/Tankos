@@ -2,37 +2,29 @@
 
 #pragma once
 
+#include "Machine.h"
 #include "Cannon.h"
+#include "GameStruct.h"
 #include "CoreMinimal.h"
+#include "HealthComponent.h"
+#include "Components/BoxComponent.h"
+#include "DamageTaker.h"
 #include "GameFramework/Pawn.h"
 #include "TankPawn.generated.h"
 
-
-class UStaticMeshComponent;
-class ACannon;
 class UArrowComponent;
 UCLASS()
-class TANKOS_API ATankPawn : public APawn
+class TANKOS_API ATankPawn : public AMachine
 {
 	GENERATED_BODY()
 
 protected:
 	// Called when the game starts or when spawned
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* BodyMesh;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UCameraComponent* Camera;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
-	UArrowComponent* CannonSetupPoint;
-
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.0f;
@@ -65,24 +57,27 @@ public:
 	void MoveRight(float Value);
 	void RotateRight(float Value);
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
-	TSubclassOf<ACannon> CannonClass;
+	UFUNCTION()
+	FVector GetTurretForwardVector();
+
+	UFUNCTION()
+	void RotateTurretTo(FVector TargetPosition);
+
+	FVector GetEyesPosition();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
 	TSubclassOf<ACannon> SecondCannonClass;
 
-	TSubclassOf<ACannon> GetCannonClass() { return CannonClass; }
+	/*TSubclassOf<ACannon> GetCannonClass() { return CannonClass; }*/
 
 	TSubclassOf<ACannon> GetSecondCannonClass() { return SecondCannonClass; }
 
-	UPROPERTY()
-	ACannon* Cannon;
-
 	ACannon* GetCannon() { return Cannon; }
 
-	void Fire();
+	
 	void FireSpecial();
 	void BulletReload();
-	void SetupCannon(TSubclassOf<ACannon> NewCannonClass);
+	
 	void ChangeCannon();
 	uint8 GetBulletValue() { return Cannon->GetBulletValue(); }
 

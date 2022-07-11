@@ -2,7 +2,9 @@
 
 #pragma once
 
+#include "Turret.h"
 #include "CoreMinimal.h"
+#include "IScorable.h"
 #include "GameFramework/Actor.h"
 #include "Projectile.generated.h"
 
@@ -10,9 +12,20 @@ UCLASS()
 class TANKOS_API AProjectile : public AActor
 {
 	GENERATED_BODY()
+
+	/*DECLARE_EVENT_OneParam(AProjectile, FOnDestroy, float);
+	DECLARE_EVENT(AProjectile, FOnAddScore);*/
 	
 public:	
 	AProjectile();
+
+	/*FOnDestroy OnDestroy;
+	FOnAddScore OnAddScore;*/
+
+	/*virtual void ScoreAdd(FScoreData ScoreData);*/
+	virtual void BeginPlay() override;
+
+	//float GetCurrentScore() { return currentScore; }
 
 	void Start();
 
@@ -35,4 +48,15 @@ protected:
 	UFUNCTION()
 	void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	/*UPROPERTY()
+	float currentScore;
+
+	UPROPERTY()
+	float startScore;
+
+	UPROPERTY()
+	float killingPoints = 1.0f;*/
+
+	UPROPERTY()
+	class ATurret* turret;
 };

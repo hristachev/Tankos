@@ -54,6 +54,7 @@ void ACannon::Fire()
 		AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
 		if (projectile)
 		{
+			projectile->SetOwner(this);
 			projectile->Start();
 		}
 	}
@@ -70,12 +71,32 @@ void ACannon::Fire()
 		FVector StartTrace = ProjectileSpawnPoint->GetComponentLocation();
 		FVector EndTrace = StartTrace + ProjectileSpawnPoint->GetForwardVector() * FireRange;
 
+
 		if (GetWorld()->LineTraceSingleByChannel(hitResult, StartTrace, EndTrace, ECollisionChannel::ECC_Visibility, traceParams))
 		{
 			DrawDebugLine(GetWorld(), StartTrace, hitResult.Location, FColor::Red, false, 0.5f, 0, 10);
 			if (hitResult.GetActor())
 			{
-				hitResult.GetActor()->Destroy();
+				float Damage = 10.0f;
+				AActor* owner = GetOwner();
+				AActor* ownerByOwner = owner != nullptr ? owner->GetOwner() : nullptr;
+				if (hitResult.GetActor() != owner && hitResult.GetActor() != ownerByOwner)
+				{
+					IDamageTaker* damageTakerActor = Cast<IDamageTaker>(hitResult.GetActor());
+					if (damageTakerActor)
+					{
+						FDamageData damageData;
+						damageData.DamageValue = Damage;
+						damageData.Instigator = owner;
+						damageData.DamageMaker = this;
+
+						damageTakerActor->TakeDamage(damageData);
+					}
+					else
+					{
+						hitResult.GetActor()->Destroy();
+					}
+				}
 			}
 		}
 		else

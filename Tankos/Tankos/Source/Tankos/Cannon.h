@@ -22,6 +22,7 @@ public:
 	void Reload();
 	void BulletReload();
 	bool EmptyAmmo();
+	bool IsReadyToFire() { return bCanFire; }
 
 	float GetBulletValue() { return BulletValue; }
 	void UpdateBullet(float PickAmmo);
