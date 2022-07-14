@@ -39,13 +39,13 @@ AProjectile::AProjectile()
 //	}
 //}
 
-void AProjectile::BeginPlay()
-{
-	/*startScore = 0.0f;
-	currentScore = startScore;
-	FScoreData score;
-	score.scoreValue = startScore;*/
-}
+//void AProjectile::BeginPlay()
+//{
+//	/*startScore = 0.0f;
+//	currentScore = startScore;
+//	FScoreData score;
+//	score.scoreValue = startScore;*/
+//}
 
 void AProjectile::Start()
 {
@@ -76,6 +76,7 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			damageData.DamageMaker = this;
 
 			damageTakerActor->TakeDamage(damageData);
+
 			
 			/*FScoreData scoreData;
 			scoreData.scoreValue = killingPoints;
@@ -84,7 +85,9 @@ void AProjectile::OnMeshOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 		}
 		else
 		{
+			
 			OtherActor->Destroy();	
+			
 		}
 		Destroy();
 	}

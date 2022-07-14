@@ -23,7 +23,8 @@ class TANKOS_API ATurret : public AMachine
 public:	
 	ATurret();
 
-	
+	FVector GetEyesPosition();
+
 protected:
 	
 	virtual void BeginPlay() override;
@@ -32,6 +33,7 @@ protected:
 	void RotateToPlayer();
 	bool IsPlayerInRange();
 	bool CanFire();
+	bool IsPlayerSeen();
 	//virtual void ScoreAdd(FScoreData ScoreData);
 	/*void AddScore();
 	void Died(float score);*/

@@ -19,12 +19,18 @@ class TANKOS_API ATankPawn : public AMachine
 	GENERATED_BODY()
 
 protected:
-	// Called when the game starts or when spawned
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
 	class UCameraComponent* Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Components", Meta = (MakeEditWidget = true))
+	TArray<FVector> PatrollingPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Components")
+	float MovementAccurency = 30.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.0f;
@@ -47,6 +53,8 @@ private:
 	float RightAxisValue = 0.0f;
 	float CurrentRotateAxisValue = 0.0f;
 	float RotateRightAxisValue = 0.0f;
+	float RotationTurretValue = 0.0f;
+	float CurrentRotationTurretValue = 0.0f;
 
 	bool bUseMainCannon = true;
 public:
@@ -58,10 +66,16 @@ public:
 	void RotateRight(float Value);
 
 	UFUNCTION()
+	float GetRotationTurretValue() { return RotationTurretValue; }
+
+	UFUNCTION()
 	FVector GetTurretForwardVector();
 
 	UFUNCTION()
 	void RotateTurretTo(FVector TargetPosition);
+
+	UFUNCTION()
+	void RotateTurretRight(float Value);
 
 	FVector GetEyesPosition();
 
@@ -83,4 +97,10 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; }
+
+	UFUNCTION()
+	float GetAccurency() { return MovementAccurency; }
 };

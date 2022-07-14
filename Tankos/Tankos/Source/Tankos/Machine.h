@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Cannon.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
 #include "CoreMinimal.h"
 #include "HealthComponent.h"
 #include "DamageTaker.h"
@@ -12,6 +15,9 @@
 
 class UStaticMeshComponent;
 class ACannon;
+class UParticleSystemComponent;
+class UAudioComponent;
+
 UCLASS()
 class TANKOS_API AMachine : public APawn, public IDamageTaker
 {
@@ -56,4 +62,19 @@ protected:
 
 	UFUNCTION()
 	void DamageTaked(float DamageValue);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UAudioComponent* AOnHitEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* POnHitEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UForceFeedbackEffect* OnHitForceEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UAudioComponent* AOnDieEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* POnDieEffect;
 };

@@ -18,6 +18,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetPawn(APawn* InPawn) override;
 	FVector GetMousePos() { return MousePos; }
+	bool getIsGamepadeValid() { return bIsGamepadeValid; }
 	UPROPERTY()
 	class ATankPawn* TankPawn;
 	UPROPERTY()
@@ -37,4 +38,8 @@ protected:
 	void BulletReload();
 	UFUNCTION()
 	void ChangeCannon();
+	UFUNCTION()
+	void RotateTurret(float Value);
+private:
+	bool bIsGamepadeValid = false;
 };

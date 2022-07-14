@@ -17,6 +17,7 @@ ATankPawn::ATankPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm"));
 	SpringArm->SetupAttachment(BodyMesh);
@@ -63,6 +64,12 @@ void ATankPawn::RotateTurretTo(FVector TargetPosition)
 	TurretMesh->SetWorldRotation(FMath::Lerp(TurretRotation, targetRotation, RotationInterpolationKey));
 }
 
+
+void ATankPawn::RotateTurretRight(float Value)
+{
+	RotationTurretValue = Value;
+}
+
 FVector ATankPawn::GetEyesPosition()
 {
 	return CannonSetupPoint->GetComponentLocation();
@@ -102,6 +109,9 @@ void ATankPawn::Tick(float DeltaSeconds)
 
 	//tank rotation
 	CurrentRotateAxisValue = FMath::Lerp(CurrentRotateAxisValue, RotateRightAxisValue, InterpolationKey);
+
+	//UE_LOG(LogTemp, Warning, TEXT("CurrentRightAxisValue = %f TargetRightAxisValue = % f"), CurrentRotateAxisValue, RotateRightAxisValue);
+
 	float YawRotation = RotationSpeed * RotateRightAxisValue * DeltaSeconds;
 
 	FRotator CurrentRotation = GetActorRotation();
@@ -113,11 +123,27 @@ void ATankPawn::Tick(float DeltaSeconds)
 	//turret rotation
 	if (TankController)
 	{
+		if(TankController->bShowMouseCursor && !TankController->getIsGamepadeValid())
+		{
 		FVector MousePos = TankController->GetMousePos();
 		RotateTurretTo(MousePos);
+		}
+		else
+		{
+			CurrentRotationTurretValue = FMath::Lerp(CurrentRotationTurretValue, RotationTurretValue, RotationInterpolationKey);
+			//UE_LOG(LogTemp, Warning, TEXT("CurrentRotationTurretValue = %f, RotationTurretValue = % f\n"), CurrentRotationTurretValue, RotationTurretValue);
+			float turretYawRotation = 500.0f * RotationTurretValue * DeltaSeconds;
+			//UE_LOG(LogTemp, Warning, TEXT("turretYawRotation = %f"), turretYawRotation);
+			FRotator turretCurrentRotation = TurretMesh->GetComponentRotation();
+			turretYawRotation += turretCurrentRotation.Yaw;
+
+			FRotator turretNewRotation = FRotator(0.0f, turretYawRotation, 0.0f);
+
+			TurretMesh->SetWorldRotation(FMath::Lerp(turretCurrentRotation, turretNewRotation, RotationInterpolationKey * 10.0f));
+		}
 	}
 }
-
+ 
 void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();

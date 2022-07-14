@@ -23,7 +23,7 @@ public:
 	FOnAddScore OnAddScore;*/
 
 	/*virtual void ScoreAdd(FScoreData ScoreData);*/
-	virtual void BeginPlay() override;
+	//virtual void BeginPlay() override;
 
 	//float GetCurrentScore() { return currentScore; }
 
@@ -58,5 +58,6 @@ protected:
 	float killingPoints = 1.0f;*/
 
 	UPROPERTY()
-	class ATurret* turret;
+	ATurret* turret;
+	
 };

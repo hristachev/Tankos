@@ -3,10 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TankController.h"
-#include "GameFramework/Actor.h"
 #include "GameStruct.h"
+#include "TankController.h"
+#include "MatineeCameraShake.h"
+#include "Components/AudioComponent.h"
+#include "GameFramework/Actor.h"
+#include "GameFramework/ForceFeedbackEffect.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Cannon.generated.h"
+
+class UMatineeCameraShake;
 
 UCLASS()
 class TANKOS_API ACannon : public AActor
@@ -71,6 +77,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	TSubclassOf<class AProjectile> ProjectileClass;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UParticleSystemComponent* ShootEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UAudioComponent* AudioEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UForceFeedbackEffect* ShootForceEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	TSubclassOf<UMatineeCameraShake> ShootShake;
 
 private:
 	bool bCanFire = true;
