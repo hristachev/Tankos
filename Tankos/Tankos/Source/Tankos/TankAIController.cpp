@@ -11,23 +11,17 @@ void ATankAIController::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	TankPawn = Cast<ATankPawn>(GetPawn());
-	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-
-	FVector pawnLocation = TankPawn->GetActorLocation();
-	MovementAccurency = TankPawn->GetAccurency();
-	TArray<FVector> points = TankPawn->GetPatrollingPoints();
-
-	for (FVector point : points)
-	{
-		PatrollingPath.Add(point + pawnLocation);
-	}
-	CurrentPatrollingIndex = 0;
+	Initialize();
 }
 
 void ATankAIController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	if (!TankPawn)
+		Initialize();
+	if (!TankPawn)
+		return;
 
 	TankPawn->MoveForward(1);
 
@@ -41,7 +35,8 @@ float ATankAIController::GetRotationValue()
 {
 	FVector currentPoint = PatrollingPath[CurrentPatrollingIndex];
 	FVector pawnLocation = TankPawn->GetActorLocation();
-	if (FVector::Distance(currentPoint, pawnLocation) <= MovementAccurency)
+	float Dist = FVector::Distance(currentPoint, pawnLocation);
+	if (Dist <= MovementAccurency)
 	{
 		CurrentPatrollingIndex++;
 		if (CurrentPatrollingIndex >= PatrollingPath.Num())
@@ -61,11 +56,8 @@ float ATankAIController::GetRotationValue()
 
 	float rightAngle = FMath::RadiansToDegrees(acosf(FVector::DotProduct(rightDirection, moveDirection)));
 
-	float RotationValue = 0;
-	if (forwardAngle > 5)
-	{
-		RotationValue = 1;
-	}
+	float RotationValue = 1;
+	
 	if (RotationValue > 90)
 	{
 		RotationValue = -RotationValue;
@@ -76,10 +68,13 @@ float ATankAIController::GetRotationValue()
 
 void ATankAIController::Targeting()
 {
-	if (CanFire())
-		Fire();
-	else
+	if (!PlayerPawn)
+		return;
+	
+	if (IsPlayerRange())
 		RotateToPlayer();
+	if (CanFire() && IsPlayerRange())
+		Fire();
 }
 
 void ATankAIController::RotateToPlayer()
@@ -114,6 +109,9 @@ void ATankAIController::Fire()
 
 bool ATankAIController::IsPlayerSeen()
 {
+	if (!PlayerPawn)
+		Initialize();
+
 	FVector playerPos = PlayerPawn->GetActorLocation();
 	FVector eyesPos = TankPawn->GetEyesPosition();
 
@@ -134,4 +132,24 @@ bool ATankAIController::IsPlayerSeen()
 	}
 	DrawDebugLine(GetWorld(), eyesPos, playerPos, FColor::Purple, false, 0.5f, 0, 10);
 	return false;
+}
+
+void ATankAIController::Initialize()
+{
+	TankPawn = Cast<ATankPawn>(GetPawn());
+
+	if (!TankPawn)
+		return;
+
+	PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+
+	FVector pawnLocation = TankPawn->GetActorLocation();
+	MovementAccurency = TankPawn->GetAccurency();
+	TArray<FVector> points = TankPawn->GetPatrollingPoints();
+
+	for (FVector point : points)
+	{
+		PatrollingPath.Add(point);
+	}
+	CurrentPatrollingIndex = 0;
 }

@@ -48,6 +48,11 @@ void ATankPawn::RotateRight(float Value)
 	RotateRightAxisValue = Value;
 }
 
+void ATankPawn::SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints)
+{
+	PatrollingPoints = NewPatrollingPoints;
+}
+
 FVector ATankPawn::GetTurretForwardVector()
 {
 	return TurretMesh->GetForwardVector();
@@ -153,6 +158,15 @@ void ATankPawn::BeginPlay()
 	TankController = Cast<ATankController>(GetController());
 }
 
+TArray<FVector> ATankPawn::GetPatrollingPoints()
+{
+	TArray<FVector> points;
+	for (ATargetPoint* point : PatrollingPoints)
+	{
+		points.Add(point->GetActorLocation());
+	}
+	return points;
+}
 
 void ATankPawn::ChangeCannon()
 {

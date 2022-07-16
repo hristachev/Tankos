@@ -53,14 +53,13 @@ void ATurret::Destroyed()
 
 void ATurret::Targeting()
 {
+	if (!PlayerPawn)
+		return;
+
 	if (IsPlayerInRange())
-	{
 		RotateToPlayer();
-		if (CanFire() && Cannon && Cannon->IsReadyToFire())
-		{
-			Fire();
-		}
-	}
+	if (CanFire() && IsPlayerInRange())
+		Fire();
 }
 
 void ATurret::RotateToPlayer()

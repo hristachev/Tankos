@@ -6,6 +6,7 @@
 #include "Cannon.h"
 #include "GameStruct.h"
 #include "CoreMinimal.h"
+#include "Engine/TargetPoint.h"
 #include "HealthComponent.h"
 #include "Components/BoxComponent.h"
 #include "DamageTaker.h"
@@ -27,7 +28,7 @@ protected:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Components", Meta = (MakeEditWidget = true))
-	TArray<FVector> PatrollingPoints;
+	TArray<class ATargetPoint*> PatrollingPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Components")
 	float MovementAccurency = 30.0f;
@@ -65,6 +66,8 @@ public:
 	void MoveRight(float Value);
 	void RotateRight(float Value);
 
+	void SetPatrollingPoints(TArray<ATargetPoint*> NewPatrollingPoints);
+
 	UFUNCTION()
 	float GetRotationTurretValue() { return RotationTurretValue; }
 
@@ -99,7 +102,7 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	TArray<FVector> GetPatrollingPoints() { return PatrollingPoints; }
+	TArray<FVector> GetPatrollingPoints();
 
 	UFUNCTION()
 	float GetAccurency() { return MovementAccurency; }
