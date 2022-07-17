@@ -21,6 +21,10 @@ ATankFactory::ATankFactory()
 	BuildingMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BuildingMesh"));
 	BuildingMesh->SetupAttachment(sceneComp);
 
+	DestroyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DestroyMesh"));
+	DestroyMesh->SetAutoActivate(false);
+	DestroyMesh->SetupAttachment(sceneComp);
+
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollider"));
 	BoxCollider->SetupAttachment(BuildingMesh);
 
@@ -30,6 +34,23 @@ ATankFactory::ATankFactory()
 	HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 	HealthComponent->OnHealthChanged.AddUObject(this, &ATankFactory::DamageTaked);
 	HealthComponent->OnDie.AddUObject(this, &ATankFactory::Die);
+
+	ATankSpawn = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioTankSpawnEffect"));
+	ATankSpawn->SetAutoActivate(false);
+
+	PTankSpawn = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("TankSpawnEffect"));
+	PTankSpawn->SetAutoActivate(false);
+	PTankSpawn->SetupAttachment(TankSpawnPoint);
+
+	ADestroyFactory = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioDestroyFactoryEffect"));
+	ADestroyFactory->SetAutoActivate(false);
+
+	PDestroyFactory = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("DestroyFactoryEffect"));
+	PDestroyFactory->SetAutoActivate(false);
+	PDestroyFactory->SetupAttachment(sceneComp);
+
+
+
 }
 
 void ATankFactory::BeginPlay()
@@ -47,12 +68,18 @@ void ATankFactory::BeginPlay()
 
 void ATankFactory::SpawnTank()
 {
+	ATankSpawn->Play();
+
 	FTransform spawnTransform(TankSpawnPoint->GetComponentRotation(), TankSpawnPoint->GetComponentLocation(), FVector(1));
 	ATankPawn* newTank = GetWorld()->SpawnActorDeferred<ATankPawn>(SpawnTankClass, spawnTransform, this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 
 	newTank->SetPatrollingPoints(TankWayPoints);
 
+	
+	PTankSpawn->ActivateSystem();
+
 	UGameplayStatics::FinishSpawningActor(newTank, spawnTransform);
+
 }
 
 void ATankFactory::TakeDamage(FDamageData DamageData)
@@ -67,8 +94,12 @@ void ATankFactory::Die()
 		MapLoader->SetIsActivated(true); 
 	}
 
+	ADestroyFactory->Play();
+	PDestroyFactory->ActivateSystem();
 
-	Destroy();
+
+	BuildingMesh->SetVisibility(false);
+	DestroyMesh->SetActive(true);
 }
 
 void ATankFactory::DamageTaked(float DamageValue)

@@ -4,10 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "TankPawn.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Components/AudioComponent.h"
 #include "Engine/TargetPoint.h"
 #include "GameFramework/Actor.h"
 #include "DamageTaker.h"
 #include "TankFactory.generated.h"
+
+class UParticleSystemComponent;
+class UAudioComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class TANKOS_API ATankFactory : public AActor, public IDamageTaker
@@ -32,7 +38,10 @@ protected:
 	void DamageTaked(float DamageValue);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class UStaticMeshComponent* BuildingMesh;
+	UStaticMeshComponent* BuildingMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	UStaticMeshComponent* DestroyMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	class UBoxComponent* BoxCollider;
@@ -54,4 +63,17 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MapLoader")
 	class AMapLoader* MapLoader;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UAudioComponent* ATankSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* PTankSpawn;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UAudioComponent* ADestroyFactory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	UParticleSystemComponent* PDestroyFactory;
+
 };
