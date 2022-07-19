@@ -27,11 +27,14 @@ public:
 
 	//float GetCurrentScore() { return currentScore; }
 
-	void Start();
+	virtual void Start();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	class UStaticMeshComponent* ProjectileMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	bool bEnableExplode = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	float MoveSpeed = 100.0f;
@@ -42,8 +45,20 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
 	float Damage = 10.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	float PushForce = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement params")
+	float ExplodeRadius = 50.0f;
+
+	void Explode();
+
+	void DamageHit(IDamageTaker* damageTakerActor, AActor* owner);
+
+	void PhysicPush(AActor* otherActor, UPrimitiveComponent* mesh);
+
 	FTimerHandle MoveTimer;
-	void Move();
+	virtual void Move();
 
 	UFUNCTION()
 	void OnMeshOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

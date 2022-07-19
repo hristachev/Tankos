@@ -31,7 +31,7 @@ protected:
 	TArray<class ATargetPoint*> PatrollingPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Components")
-	float MovementAccurency = 30.0f;
+	float MovementAccurency = 10.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|Speed")
 	float MoveSpeed = 100.0f;

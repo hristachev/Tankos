@@ -17,15 +17,9 @@ ATurret::ATurret()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	UStaticMesh* BodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
-	if (BodyMeshTemp)
-		BodyMesh->SetStaticMesh(BodyMeshTemp);
+	
 
-	UStaticMesh* TurretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
-	if (TurretMeshTemp)
-		TurretMesh->SetStaticMesh(TurretMeshTemp);
-
-	projectile = CreateDefaultSubobject<AProjectile>(TEXT("Score Component"));
+	//projectile = CreateDefaultSubobject<AProjectile>(TEXT("Score Component"));
 	/*projectile->OnDestroy.AddUObject(this, &ATurret::Died);
 	projectile->OnAddScore.AddUObject(this, &ATurret::AddScore);*/
 }
@@ -45,6 +39,19 @@ void ATurret::BeginPlay()
 	GetWorld()->GetTimerManager().SetTimer(TargetingTimer, this, &ATurret::Targeting, TargetingRate, true, TargetingRate);
 }
 
+void ATurret::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	UStaticMesh* BodyMeshTemp = LoadObject<UStaticMesh>(this, *BodyMeshPath);
+	if (BodyMeshTemp)
+		BodyMesh->SetStaticMesh(BodyMeshTemp);
+
+	UStaticMesh* TurretMeshTemp = LoadObject<UStaticMesh>(this, *TurretMeshPath);
+	if (TurretMeshTemp)
+		TurretMesh->SetStaticMesh(TurretMeshTemp);
+}
+
 void ATurret::Destroyed()
 {
 	if (Cannon)
@@ -56,7 +63,7 @@ void ATurret::Targeting()
 	if (!PlayerPawn)
 		return;
 
-	if (IsPlayerInRange())
+	if (IsPlayerInRange() && IsPlayerSeen())
 		RotateToPlayer();
 	if (CanFire() && IsPlayerInRange())
 		Fire();
