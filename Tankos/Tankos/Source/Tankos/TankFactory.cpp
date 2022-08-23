@@ -49,8 +49,6 @@ ATankFactory::ATankFactory()
 	PDestroyFactory->SetAutoActivate(false);
 	PDestroyFactory->SetupAttachment(sceneComp);
 
-
-
 }
 
 void ATankFactory::BeginPlay()
@@ -62,12 +60,27 @@ void ATankFactory::BeginPlay()
 		MapLoader->SetIsActivated(false);
 	}
 
-	FTimerHandle SpawnTimer;
-	GetWorld()->GetTimerManager().SetTimer(SpawnTimer, this, &ATankFactory::SpawnTank, SpawnTankRate, true, SpawnTankRate);
+	if (Teleport)
+	{
+		Teleport->SetIsActivated(false);
+	}
+	if (SecondTeleport)
+	{
+		SecondTeleport->SetIsActivated(false);
+	}
+
+	if (bIsCanSpawn)
+	{
+		FTimerHandle SpawnTimer;
+		GetWorld()->GetTimerManager().SetTimer(SpawnTimer, this, &ATankFactory::SpawnTank, SpawnTankRate, true, SpawnTankRate);
+	}
 }
 
 void ATankFactory::SpawnTank()
 {
+	if (!bIsCanSpawn)
+		return;
+
 	ATankSpawn->Play();
 
 	FTransform spawnTransform(TankSpawnPoint->GetComponentRotation(), TankSpawnPoint->GetComponentLocation(), FVector(1));
@@ -94,9 +107,21 @@ void ATankFactory::Die()
 		MapLoader->SetIsActivated(true); 
 	}
 
+	if (Teleport)
+	{
+		Teleport->SetIsActivated(true);
+		Teleport->DestroyGate();
+	}
+	if (SecondTeleport)
+	{
+		SecondTeleport->SetIsActivated(true);
+		SecondTeleport->DestroyGate();
+	}
+
 	ADestroyFactory->Play();
 	PDestroyFactory->ActivateSystem();
 
+	bIsCanSpawn = false;
 
 	BuildingMesh->SetVisibility(false);
 	DestroyMesh->SetActive(true);

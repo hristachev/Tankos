@@ -153,9 +153,15 @@ void ATankPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f));
-
 	TankController = Cast<ATankController>(GetController());
+	
+
+	// set Z offset only for playable pawn
+	if (GetWorld()->GetFirstPlayerController()->GetPawn() == this)
+	{
+		SetActorLocation(FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f));
+	}
+	
 }
 
 TArray<FVector> ATankPawn::GetPatrollingPoints()

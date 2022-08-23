@@ -57,7 +57,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
 	TSubclassOf<ACannon> CannonClass;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Turret|Component")
 	ACannon* Cannon;
 
 	UFUNCTION()

@@ -8,6 +8,7 @@
 #include "Components/AudioComponent.h"
 #include "Engine/TargetPoint.h"
 #include "GameFramework/Actor.h"
+#include "TeleportActor.h"
 #include "DamageTaker.h"
 #include "TankFactory.generated.h"
 
@@ -59,10 +60,19 @@ protected:
 	float SpawnTankRate = 2.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Parameters")
+	bool bIsCanSpawn = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Parameters")
 	TArray<class ATargetPoint*> TankWayPoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MapLoader")
 	class AMapLoader* MapLoader;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport")
+	class ATeleportActor* Teleport;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Teleport")
+	class ATeleportActor* SecondTeleport;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 	UAudioComponent* ATankSpawn;

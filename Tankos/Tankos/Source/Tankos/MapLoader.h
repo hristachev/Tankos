@@ -14,18 +14,18 @@ class TANKOS_API AMapLoader : public AActor
 	GENERATED_BODY()
 
 protected:
-		UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		UStaticMeshComponent* GatesMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UBoxComponent* TriggerCollider;
+	UStaticMeshComponent* GatesMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UPointLightComponent* ActivatedLight;
+	class UBoxComponent* TriggerCollider;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
-		class UPointLightComponent* DeactivatedLight;
+	class UPointLightComponent* ActivatedLight;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = "Components")
+	class UPointLightComponent* DeactivatedLight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level loading params")
-		FName LoadLevelName;
+	FName LoadLevelName;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level loading params")
-		bool IsActivated = false;
+	bool IsActivated = false;
 public:
 	// Sets default values for this actor's properties
 	AMapLoader();
